@@ -13,7 +13,7 @@ public class Collectable : MonoBehaviour
     public CollectableType type = CollectableType.money;
 
     private SpriteRenderer sprite;
-    private CircleCollider2D itemcollider;
+    private CircleCollider2D itemCollider;
 
     bool hasBeenCollected = false;
 
@@ -21,24 +21,46 @@ public class Collectable : MonoBehaviour
 
     private void Awake() {
         sprite = GetComponent<SpriteRenderer>();
-        itemcollider = GetComponent<CircleCollider2D>();
+        itemCollider = GetComponent<CircleCollider2D>();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    
+    void Show(){
+        sprite.enabled = true;
+        itemCollider.enabled = true;
+        hasBeenCollected = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void Hide(){
+        sprite.enabled = false;
+        itemCollider.enabled = false;
     }
+
+    void Collect(){
+        Hide();
+        hasBeenCollected = true;
+
+        switch(this.type){
+            case CollectableType.money:
+
+            GameManager.sharedInstance.CollectObject(this);
+            //TODO: logica  de la moneda
+            break;
+
+            case CollectableType.healthPotion:
+            //TODO: logica  de la pocion de salud
+            break;
+
+            case CollectableType.manaPotion:
+            //TODO: logica  de pocion de mana
+            break;
+        }
+    }
+    
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.tag == "Player")
         {
-            Destroy(gameObject);
+           Collect();
         }
     }
 }
